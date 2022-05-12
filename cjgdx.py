@@ -84,6 +84,19 @@ class ImageProcessor():
         pixmapimage = pixmapimage.scaled(w,h, Qt.KeepAspectRatio)
         image_label.setPixmap(pixmapimage)
         image_label.show()
+    def do_bw(self):
+        self.image = self.image.convert("L")
+        self.saveImage()
+        image_path = os.path.join(self.dir,self.save_dir,self.filename)
+        self.showImage(image_path)
+
+    def saveImage(self):
+        path = os.path.join(self.dir,self.save_dir) 
+        if not (os.path.exists(path) or os.path.isdir(path)):
+            os.mkdir(path)
+        image_path = os.path.join(path,self.filename)
+        self.image.save(image_path)
+
 def showChosenImage():
     if file_list.currentRow() >= 0:
         filename = file_list.currentItem().text()
@@ -92,6 +105,8 @@ def showChosenImage():
         workimage.showImage(image_path)
 
 workimage = ImageProcessor()
+
+button_bw.clicked.connect(workimage.do_bw)
 
 file_list.currentRowChanged.connect(showChosenImage)
 button_dir.clicked.connect(showFilesinlist)
